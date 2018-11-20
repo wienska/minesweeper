@@ -3,8 +3,14 @@
     <h1>{{ msg }}</h1>
     <div class="status">{{ status }}</div>
     <div v-for="(row, rowIndex) in field" :key="rowIndex" class="field_row">
-      <div v-for="(item, index) in row" :key="index" class="field_item" @click.prevent="handleClick(item, rowIndex, index)">
-        <span v-show="item.show">{{item.value}}</span>
+      <div
+        v-for="(item, index) in row"
+        :key="index"
+        class="field_item"
+        :class="{ __flag: item.flag }"
+        @click.prevent="handleClick(item, rowIndex, index)"
+        @contextmenu.prevent="setFlag(item)">
+          <span v-show="item.show">{{ item.value }}</span>
       </div>
     </div>
   </div>
@@ -41,7 +47,7 @@ export default {
       for (let i = 0; i < this.rows; i++) {
         this.field.push([]);
         for(let j = 0; j < this.cols; j++) {
-          this.field[i].push({ show: false, value: 0 });
+          this.field[i].push({ show: false, value: 0, flag: false });
         }
       }
     },
@@ -59,14 +65,19 @@ export default {
       })
     },
     handleClick (item, row, index) {
-      item.show = true;
-      if (item.value === 'x') {
-        this.status = 'loose';
+      if (!item.flag) {
+        item.show = true;
+        if (item.value === 'x') {
+          this.status = 'loose';
+        }
+        if (!item.value) {
+          this.checkPrev(row, index);
+          this.checkNext(row, index);
+        }
       }
-      if (!item.value) {
-        this.checkPrev(row, index);
-        this.checkNext(row, index);
-      }
+    },
+    setFlag (item) {
+      item.flag = true;
     },
     checkPrev (row, index) {
       this.field[row][index].show = true;
@@ -112,6 +123,9 @@ a {
   border: 1px solid #999;
   display: inline-block;
   vertical-align: top;
+}
+.field_item.__flag {
+  border: 1px solid red;
 }
 .status {
   font-weight: bold;
