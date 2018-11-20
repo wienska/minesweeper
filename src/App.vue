@@ -1,16 +1,16 @@
 <template>
   <div id="app">
-    <HelloWorld msg="Minesweeper"/>
+    <minesweeper msg="Minesweeper"></minesweeper>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import minesweeper from './components/minesweeper.vue'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    minesweeper
   }
 }
 </script>
